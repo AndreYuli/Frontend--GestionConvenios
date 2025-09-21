@@ -4,7 +4,7 @@ import logo from '../assets/logo.jpg'
 import { Link } from 'react-router-dom'
 import '../styles/register.css'
 
-function Register() {   // 👈 Cambié App → Register
+function Register() {   
   const [count, setCount] = useState(0)
 
   const handleSubmit = (e) => {
