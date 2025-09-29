@@ -1,49 +1,51 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext";
 import Swal from "sweetalert2";
 import "../styles/login.css";
 import logo from "../assets/logo.jpg";
 
 function Login() {
   const navigate = useNavigate();
+  const { signin, isAuthenticated, errors } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Mostrar errores del contexto
+  useEffect(() => {
+    if (errors && errors.length > 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: Array.isArray(errors) ? errors.join(', ') : errors,
+        confirmButtonColor: "#667eea",
+      });
+    }
+  }, [errors]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:4000/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "¡Bienvenido!",
-          text: data.message,
-          confirmButtonColor: "#667eea",
-        });
-        navigate("/dashboard");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: data.error,
-          confirmButtonColor: "#667eea",
-        });
-      }
-    } catch (error) {
+      await signin({ email, password });
+      
+      // Si llega aquí, el login fue exitoso
       Swal.fire({
-        icon: "error",
-        title: "Servidor no disponible",
-        text: "Verifica que el backend esté corriendo ",
+        icon: "success",
+        title: "¡Bienvenido!",
+        text: "Has iniciado sesión correctamente",
         confirmButtonColor: "#667eea",
       });
+    } catch (error) {
+      // Los errores se manejan en el contexto y se muestran arriba
+      console.log("Error en login:", error);
     }
   };
 

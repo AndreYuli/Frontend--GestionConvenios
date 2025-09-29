@@ -1,18 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext";
 import "../styles/register.css";
 import logo from "../assets/logo.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function Register() {
+  const { signup, isAuthenticated, errors } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Mostrar errores del contexto con mejor formato
+  useEffect(() => {
+    if (errors && errors.length > 0) {
+      let errorMessage = "";
+      
+      if (typeof errors === "string") {
+        errorMessage = errors;
+      } else if (Array.isArray(errors)) {
+        errorMessage = errors.map(err => {
+          if (typeof err === "object" && err.message) {
+            return err.message;
+          }
+          return err;
+        }).join('\n');
+      }
+      
+      Swal.fire({
+        icon: "error",
+        title: "Error de Validación",
+        html: errorMessage.replace(/\n/g, '<br>'),
+        confirmButtonColor: "#667eea",
+      });
+    }
+  }, [errors]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones del lado del cliente
     if (password !== confirmPassword) {
       Swal.fire({
         icon: "warning",
@@ -23,38 +58,42 @@ function Register() {
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:4000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "¡Registro exitoso!",
-          text: data.message,
-          confirmButtonColor: "#667eea",
-        });
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: data.error,
-          confirmButtonColor: "#667eea",
-        });
-      }
-    } catch (err) {
+    // Validar longitud mínima de contraseña
+    if (password.length < 8) {
       Swal.fire({
-        icon: "error",
-        title: "Servidor no disponible",
-        text: "Verifica que el backend esté corriendo",
+        icon: "warning",
+        title: "Contraseña muy corta",
+        text: "La contraseña debe tener al menos 8 caracteres",
         confirmButtonColor: "#667eea",
       });
+      return;
+    }
+
+    // Validar complejidad de contraseña
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+    if (!passwordRegex.test(password)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Contraseña no válida",
+        html: "La contraseña debe contener al menos:<br>• 1 letra minúscula<br>• 1 letra mayúscula<br>• 1 número",
+        confirmButtonColor: "#667eea",
+      });
+      return;
+    }
+
+    try {
+      await signup({ email, password, confirmPassword });
+      
+      // Si llega aquí, el registro fue exitoso
+      Swal.fire({
+        icon: "success",
+        title: "¡Registro exitoso!",
+        text: "Te has registrado correctamente y has iniciado sesión",
+        confirmButtonColor: "#667eea",
+      });
+    } catch (error) {
+      // Los errores se manejan en el contexto y se muestran arriba
+      console.log("Error en registro:", error);
     }
   };
 
@@ -80,8 +119,12 @@ function Register() {
           className="input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número"
           required
         />
+        <small style={{color: '#666', fontSize: '0.8rem', marginTop: '4px', display: 'block'}}>
+          Debe contener: mínimo 8 caracteres, 1 mayúscula, 1 minúscula y 1 número
+        </small>
 
         <label className="label">Confirmar Contraseña</label>
         <input
