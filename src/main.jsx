@@ -6,6 +6,7 @@ import { ProtectedRoute } from '../routes'
 
 import Login from './components/login.jsx'
 import Register from './components/register.jsx'
+import MenuPrincipal from './components/menuPrincipal.jsx'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+           <Route path="/menuprincipal" element={<MenuPrincipal />} />
           
           {/* Rutas protegidas */}
           <Route element={<ProtectedRoute />}>

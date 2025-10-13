@@ -58,7 +58,6 @@ function Register() {
       return;
     }
 
-    // Validar longitud mínima de contraseña
     if (password.length < 8) {
       Swal.fire({
         icon: "warning",
@@ -69,7 +68,6 @@ function Register() {
       return;
     }
 
-    // Validar complejidad de contraseña
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
     if (!passwordRegex.test(password)) {
       Swal.fire({
@@ -84,7 +82,6 @@ function Register() {
     try {
       await signup({ email, password, confirmPassword });
       
-      // Si llega aquí, el registro fue exitoso
       Swal.fire({
         icon: "success",
         title: "¡Registro exitoso!",
@@ -92,12 +89,12 @@ function Register() {
         confirmButtonColor: "#667eea",
       });
     } catch (error) {
-      // Los errores se manejan en el contexto y se muestran arriba
       console.log("Error en registro:", error);
     }
   };
 
   return (
+    <div className="container-wrap">
     <div className="container">
       <img src={logo} alt="Logo UNAC" className="logo" />
       <h1 className="title">Regístrate</h1>
@@ -119,7 +116,6 @@ function Register() {
           className="input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número"
           required
         />
         <small style={{color: '#666', fontSize: '0.8rem', marginTop: '4px', display: 'block'}}>
@@ -144,6 +140,8 @@ function Register() {
         ¿Ya tienes cuenta? <Link to="/login">Inicia Sesión</Link>
       </p>
     </div>
+          </div>
+
   );
 }
 
