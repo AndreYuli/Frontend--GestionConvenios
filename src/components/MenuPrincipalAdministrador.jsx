@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import '../styles/menuPrincipal.css';
 import logo from "../assets/logo.jpg";
-import { FiMenu, FiX, FiHome, FiUser, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiFilePlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    setMenuOpen(false);
+    navigate(path);
+  };
 
   const convenios = [
     { nombre: "Ciencias de la Salud", icon: "🏥", color: "#667eea" },
@@ -44,12 +51,19 @@ function Convenios() {
             </div>
 
             <ul>
-              <li><FiHome /> Inicio</li>
-              <li><FiUser /> Mi perfil</li>
+              <li onClick={() => handleNavigate("/menuprincipal")}>
+                <FiHome /> Inicio
+              </li>
+              <li onClick={() => handleNavigate("/perfil")}>
+                <FiUser /> Mi perfil
+              </li>
+              <li onClick={() => handleNavigate("/agregarconvenio")}>
+                <FiFilePlus /> Agregar convenios
+              </li>
             </ul>
 
             <div className="menu-footer">
-              <button className="btn-salir">
+              <button className="btn-salir" onClick={() => handleNavigate("/login")}>
                 <FiLogOut /> Salir
               </button>
             </div>
