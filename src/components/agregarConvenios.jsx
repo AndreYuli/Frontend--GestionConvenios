@@ -125,19 +125,27 @@ function AgregarConvenio() {
           </select>
         </div>
 
+        {/* 🔹 Fechas con etiquetas */}
         <div className="form-row">
-          <input
-            type="date"
-            name="fechaInicio"
-            value={nuevoConvenio.fechaInicio}
-            onChange={handleChange}
-          />
-          <input
-            type="date"
-            name="fechaFin"
-            value={nuevoConvenio.fechaFin}
-            onChange={handleChange}
-          />
+          <div className="fecha-group">
+            <label>Fecha de inicio:</label>
+            <input
+              type="date"
+              name="fechaInicio"
+              value={nuevoConvenio.fechaInicio}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="fecha-group">
+            <label>Fecha de fin:</label>
+            <input
+              type="date"
+              name="fechaFin"
+              value={nuevoConvenio.fechaFin}
+              onChange={handleChange}
+            />
+          </div>
         </div>
 
         {/* Subir imagen */}

@@ -77,11 +77,27 @@ html, body {
   background: #ffffff;
 }
 
+/* 🔹 Etiquetas de fechas */
+.fecha-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.fecha-group label {
+  font-size: 0.8rem;
+  color: #475569;
+  text-align: left;
+  margin-bottom: 0.3rem;
+}
+
 /* Vista previa de imagen */
 .preview-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  margin-top: 0.5rem;
+  gap: 0.5rem;
 }
 
 .preview-imagen {
@@ -89,7 +105,6 @@ html, body {
   max-width: 150px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(120, 136, 170, 0.25);
-  margin-top: 0.5rem;
 }
 
 /* Botones */
@@ -130,6 +145,23 @@ html, body {
   color: #1e293b;
 }
 
+/* Botón quitar imagen */
+.btn-quitar-imagen {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-quitar-imagen:hover {
+  background: #fecaca;
+}
+
 /* Animación */
 @keyframes fadeIn {
   from {
@@ -146,31 +178,4 @@ html, body {
   .agregar-convenio-container {
     transform: scale(0.9);
   }
-}
-
-/* ========================================
-   NUEVO: Quitar imagen seleccionada
-   ======================================== */
-.preview-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0.5rem;
-  gap: 0.5rem;
-}
-
-.btn-quitar-imagen {
-  background: #fee2e2;
-  color: #b91c1c;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-quitar-imagen:hover {
-  background: #fecaca;
 }
