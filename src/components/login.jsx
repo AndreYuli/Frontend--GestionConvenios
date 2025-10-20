@@ -1,4 +1,4 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import Swal from "sweetalert2";
@@ -7,17 +7,18 @@ import logo from "../assets/logo.jpg";
 
 function Login() {
   const navigate = useNavigate();
-  const { signin, isAuthenticated, errors } = useAuth();
+  const { signin, isAuthenticated, errors, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/menuprincipal");
+    if (isAuthenticated && user) {
+      const redirectUrl = user.isAdmin ? '/menuPrincipalAdmin' : '/menuprincipal';
+      navigate(redirectUrl);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   useEffect(() => {
     if (errors && errors.length > 0) {
@@ -35,17 +36,20 @@ function Login() {
     setIsLoading(true);
 
     try {
-      await signin({ email, password });
+      const response = await signin({ email, password });
+
+      // Obtener la URL de redirección del backend
+      const redirectUrl = response?.redirect?.url || '/menuprincipal';
 
       Swal.fire({
         icon: "success",
         title: "¡Bienvenido!",
-        text: "Has iniciado sesión correctamente",
+        text: response?.message || "Has iniciado sesión correctamente",
         confirmButtonColor: "#667eea",
         timer: 2000,
         showConfirmButton: false,
       }).then(() => {
-        navigate("/menuprincipal");
+        navigate(redirectUrl); // ← Redirige según el rol
       });
     } catch (error) {
       console.log("Error en login:", error);
@@ -206,7 +210,7 @@ function Login() {
                       confirmButtonText: 'Entendido',
                       confirmButtonColor: '#7888AA'
                     });
-                  } catch (error) {
+                  } catch {
                     Swal.fire({
                       icon: 'error',
                       title: 'Error',

@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 Importa esto
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 import '../styles/menuPrincipal.css';
 import logo from "../assets/logo.jpg";
-import { FiMenu, FiX, FiHome, FiUser, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiLogOut } from "react-icons/fi";
 
 function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate(); // 👈 Inicializa el navegador
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
-  // 🔹 Función para ir al login
-  const handleLogout = () => {
-    navigate("/login"); // 👈 Redirige al login
+  // 🔹 Función para cerrar sesión
+  const handleLogout = async () => {
+    await logout(); // Llama al logout del backend
+    setMenuOpen(false);
+    navigate("/login");
   };
 
   const convenios = [
@@ -47,7 +51,7 @@ function Convenios() {
                 alt="Avatar"
                 className="menu-avatar"
               />
-              <h4>Alejo💻</h4>
+              <h4>{user?.username || user?.email || "Usuario"}</h4>
             </div>
 
             <ul>

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../styles/menuPrincipal.css";
 import logo from "../assets/logo.jpg";
-import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiFilePlus } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiLogOut, FiFilePlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { logout, user, isAuthenticated } = useAuth();
 
   // 🔹 Verificar si hay sesión activa al cargar
   useEffect(() => {
-    const usuario = localStorage.getItem("usuario");
-    if (!usuario) {
-      navigate(""); // Si no hay sesión, redirige al login
+    if (!isAuthenticated) {
+      navigate("/login");
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   // 🔹 Función para moverse entre páginas
   const handleNavigate = (path) => {
@@ -23,10 +24,10 @@ function Convenios() {
   };
 
   // 🔹 Función para cerrar sesión
-  const handleLogout = () => {
-    localStorage.removeItem("usuario"); // Elimina la sesión
+  const handleLogout = async () => {
+    await logout(); // Llama al logout del backend
     setMenuOpen(false);
-    navigate("/login"); // Redirige al login
+    navigate("/login");
   };
 
   const convenios = [
@@ -63,7 +64,7 @@ function Convenios() {
                 alt="Avatar"
                 className="menu-avatar"
               />
-              <h4>{localStorage.getItem("usuario") || "Alejo💻"}</h4>
+              <h4>{user?.username || user?.email || "Administrador"}</h4>
             </div>
 
             <ul>

@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 import { loginRequest, registerRequest, verifyTokenRequest } from "../api/auth";
-import Cookies from "js-cookie";
+import axios from "../api/axios";
+import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
@@ -67,45 +68,52 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      setUser(res.data);
-      setIsAuthenticated(true);
+      if (res.data.success) {
+        setUser(res.data.user);
+        setIsAuthenticated(true);
+        return res.data; // permitir que el llamador reciba información del login
+      }
     } catch (error) {
       console.log(error);
-      // Manejo seguro de errores de CORS o red
       if (error.response?.data?.message) {
         setErrors(error.response.data.message);
       } else if (error.message) {
         setErrors(error.message);
       } else {
-        setErrors("Error de conexión con el servidor. Verifica que el backend esté corriendo y CORS configurado.");
+        setErrors("Error de conexión con el servidor");
       }
+      throw error; // propagar para que el componente que llamó lo pueda manejar
     }
   };
 
-  const logout = () => {
-    Cookies.remove("token");
-    setUser(null);
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      await axios.post('/auth/logout');
+    } catch (error) {
+      console.error("Error en logout:", error);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
   };
 
   useEffect(() => {
     const checkLogin = async () => {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
-
       try {
-        const res = await verifyTokenRequest(cookies.token);
-        console.log(res);
-        if (!res.data) return setIsAuthenticated(false);
-        setIsAuthenticated(true);
-        setUser(res.data);
-        setLoading(false);
+        const res = await verifyTokenRequest(); // backend usa cookie para verificar
+
+        if (res.data.isAuthenticated) {
+          setIsAuthenticated(true);
+          setUser(res.data.user);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
       } catch (error) {
+        console.error(error);
         setIsAuthenticated(false);
+        setUser(null);
+      } finally {
         setLoading(false);
       }
     };
@@ -127,6 +135,10 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default AuthContext;
