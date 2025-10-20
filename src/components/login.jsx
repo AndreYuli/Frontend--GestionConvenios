@@ -62,7 +62,7 @@ function Login() {
         </div>
 
         <h1 className="title">Portal de Convenios</h1>
-        <p className="subtitle">Universidad Nacional de Colombia</p>
+        <p className="subtitle">Universidad Adventista de Colombia</p>
 
         <div className="welcome">
           <h2>Bienvenido</h2>
