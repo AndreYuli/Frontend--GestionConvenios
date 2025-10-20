@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 Importa esto
 import '../styles/menuPrincipal.css';
 import logo from "../assets/logo.jpg";
 import { FiMenu, FiX, FiHome, FiUser, FiLogOut } from "react-icons/fi";
 
 function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate(); // 👈 Inicializa el navegador
+
+  // 🔹 Función para ir al login
+  const handleLogout = () => {
+    navigate("/login"); // 👈 Redirige al login
+  };
 
   const convenios = [
     { nombre: "Ciencias de la Salud", icon: "🏥", color: "#667eea" },
@@ -45,11 +52,11 @@ function Convenios() {
 
             <ul>
               <li><FiHome /> Inicio</li>
-              <li><FiUser /> Mi perfil</li>
             </ul>
 
             <div className="menu-footer">
-              <button className="btn-salir">
+              {/* 👇 Aquí agregamos la función */}
+              <button className="btn-salir" onClick={handleLogout}>
                 <FiLogOut /> Salir
               </button>
             </div>

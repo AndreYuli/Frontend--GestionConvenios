@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import '../styles/menuPrincipal.css';
+import React, { useState, useEffect } from "react";
+import "../styles/menuPrincipal.css";
 import logo from "../assets/logo.jpg";
 import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiFilePlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,25 @@ function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  // 🔹 Verificar si hay sesión activa al cargar
+  useEffect(() => {
+    const usuario = localStorage.getItem("usuario");
+    if (!usuario) {
+      navigate(""); // Si no hay sesión, redirige al login
+    }
+  }, [navigate]);
+
+  // 🔹 Función para moverse entre páginas
   const handleNavigate = (path) => {
     setMenuOpen(false);
     navigate(path);
+  };
+
+  // 🔹 Función para cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem("usuario"); // Elimina la sesión
+    setMenuOpen(false);
+    navigate("/login"); // Redirige al login
   };
 
   const convenios = [
@@ -18,7 +34,7 @@ function Convenios() {
     { nombre: "Teología y Religión", icon: "📚", color: "#f093fb" },
     { nombre: "Ingeniería", icon: "⚙️", color: "#4facfe" },
     { nombre: "Ciencias Administrativas y Contables", icon: "💼", color: "#43e97b" },
-    { nombre: "Ciencias Humanas y de la Educación", icon: "🎓", color: "#fa709a" }
+    { nombre: "Ciencias Humanas y de la Educación", icon: "🎓", color: "#fa709a" },
   ];
 
   return (
@@ -47,15 +63,12 @@ function Convenios() {
                 alt="Avatar"
                 className="menu-avatar"
               />
-              <h4>Alejo💻</h4>
+              <h4>{localStorage.getItem("usuario") || "Alejo💻"}</h4>
             </div>
 
             <ul>
               <li onClick={() => handleNavigate("/menuprincipal")}>
                 <FiHome /> Inicio
-              </li>
-              <li onClick={() => handleNavigate("/perfil")}>
-                <FiUser /> Mi perfil
               </li>
               <li onClick={() => handleNavigate("/agregarconvenio")}>
                 <FiFilePlus /> Agregar convenios
@@ -63,7 +76,7 @@ function Convenios() {
             </ul>
 
             <div className="menu-footer">
-              <button className="btn-salir" onClick={() => handleNavigate("/login")}>
+              <button className="btn-salir" onClick={handleLogout}>
                 <FiLogOut /> Salir
               </button>
             </div>
@@ -77,13 +90,17 @@ function Convenios() {
           <span className="badge">✨ Conectando Talentos</span>
           <h2>Convenios Institucionales UNAC</h2>
           <p>
-            Conectamos a nuestra comunidad universitaria con las mejores empresas
-            e instituciones para crear oportunidades de crecimiento profesional y académico.
+            Conectamos a nuestra comunidad universitaria con las mejores empresas e instituciones
+            para crear oportunidades de crecimiento profesional y académico.
           </p>
           <button className="btn-explorar">
             Explorar convenios
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              <path
+                fillRule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </button>
         </div>
@@ -98,7 +115,11 @@ function Convenios() {
 
         <div className="convenios-grid">
           {convenios.map((convenio, index) => (
-            <div key={index} className="convenio-card" style={{ '--card-color': convenio.color }}>
+            <div
+              key={index}
+              className="convenio-card"
+              style={{ "--card-color": convenio.color }}
+            >
               <div className="convenio-icon">{convenio.icon}</div>
               <h4>{convenio.nombre}</h4>
               <button className="btn-ver-mas">Ver convenios</button>

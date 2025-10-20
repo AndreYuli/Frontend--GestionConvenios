@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/agregarConvenio.css";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // 👈 Importar SweetAlert2
 
 function AgregarConvenio() {
   const navigate = useNavigate();
@@ -44,8 +45,20 @@ function AgregarConvenio() {
     setPreview(null);
   };
 
+  // 🔹 Agregar convenio con validaciones y alerta
   const handleAgregar = () => {
-    if (!nuevoConvenio.id || !nuevoConvenio.nombre) return;
+    const { id, nombre, fechaInicio, fechaFin, estado, facultad } = nuevoConvenio;
+
+    if (!id || !nombre || !fechaInicio || !fechaFin || !estado || !facultad) {
+      Swal.fire({
+        icon: "error",
+        title: "Faltan campos por completar",
+        text: "Por favor llena todos los campos antes de continuar.",
+        confirmButtonColor: "#d33",
+      });
+      return;
+    }
+
     setConvenios([...convenios, nuevoConvenio]);
     setNuevoConvenio({
       id: "",
@@ -57,9 +70,19 @@ function AgregarConvenio() {
       imagen: null,
     });
     setPreview(null);
+
+    // 🔹 Mostrar alerta de éxito y redirigir al menú
+    Swal.fire({
+      icon: "success",
+      title: "¡Convenio creado con éxito!",
+      text: "El convenio se ha agregado correctamente.",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Listo",
+    }).then(() => {
+      navigate("/menuprincipalAdmin"); // 👈 Redirige al menú principal del admin
+    });
   };
 
-  // ✅ Ahora lleva directamente al menú principal del admin
   const handleVolver = () => {
     navigate("/menuprincipalAdmin");
   };
@@ -140,7 +163,6 @@ function AgregarConvenio() {
           ➕ Agregar Convenio
         </button>
 
-        {/* ✅ Botón Volver al menú principal admin */}
         <button className="btn-volver" onClick={handleVolver}>
           ← Volver al menú principal
         </button>
