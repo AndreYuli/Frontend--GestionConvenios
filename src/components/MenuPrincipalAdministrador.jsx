@@ -12,12 +12,12 @@ import {
   FiCpu,
   FiBriefcase,
   FiUsers,
-  FiArrowUpCircle, // 🔹 Icono volver arriba
+  FiArrowUpCircle,
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
-function Convenios() {
+function MenuPrincipalAdministrador() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const navigate = useNavigate();
@@ -63,6 +63,7 @@ function Convenios() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // 🔹 Facultades disponibles
   const convenios = [
     { nombre: "Ciencias de la Salud", icon: <FiActivity />, color: "#667eea" },
     { nombre: "Teología y Religión", icon: <FiBook />, color: "#f093fb" },
@@ -70,6 +71,15 @@ function Convenios() {
     { nombre: "Ciencias Administrativas y Contables", icon: <FiBriefcase />, color: "#43e97b" },
     { nombre: "Ciencias Humanas y de la Educación", icon: <FiUsers />, color: "#fa709a" },
   ];
+
+  // 🔹 Mapa de nombres a IDs de facultad
+  const facultadIds = {
+    "Ciencias de la Salud": 1,
+    "Teología y Religión": 2,
+    "Ingeniería": 3,
+    "Ciencias Administrativas y Contables": 4,
+    "Ciencias Humanas y de la Educación": 5,
+  };
 
   return (
     <div className="convenios-container">
@@ -154,7 +164,17 @@ function Convenios() {
             >
               <div className="convenio-icon">{convenio.icon}</div>
               <h4>{convenio.nombre}</h4>
-              <button className="btn-ver-mas">Ver convenios</button>
+
+              {/* 🔹 Botón que redirige a convenios por facultad */}
+              <button
+                className="btn-ver-mas"
+                onClick={() => {
+                  const idFacultad = facultadIds[convenio.nombre];
+                  navigate(`/convenios/${idFacultad}`);
+                }}
+              >
+                Ver convenios
+              </button>
             </div>
           ))}
         </div>
@@ -172,4 +192,4 @@ function Convenios() {
   );
 }
 
-export default Convenios;
+export default MenuPrincipalAdministrador;
