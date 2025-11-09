@@ -1,0 +1,260 @@
+/* ======== RESET Y FONDO GENERAL ======== */
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e8edf5 0%, #f5f7fb 60%, #e8edf5 100%);
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+/* ======== CONTENEDOR PRINCIPAL ======== */
+.agregar-convenio-container {
+  width: 90%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(120, 136, 170, 0.25);
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.2rem;
+  animation: fadeIn 0.6s ease;
+  margin: 40px auto;
+}
+
+/* ======== TÍTULO ======== */
+.agregar-convenio-container h2 {
+  font-size: 1.7rem;
+  color: #1e293b;
+  font-weight: 800;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.agregar-convenio-container p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* ======== LISTA DE CONVENIOS ======== */
+.convenio-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ======== TARJETA DE CONVENIO ======== */
+.convenio-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.2rem;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.convenio-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+.convenio-card.selected {
+  border-color: #94a3b8;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
+}
+
+.card-text {
+  display: block;
+}
+
+/* ======== TEXTOS DEL CONVENIO ======== */
+.convenio-card h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.convenio-card p {
+  margin: 0.18rem 0;
+  color: #475569;
+  font-size: 0.88rem;
+}
+
+/* ======== BOTONES DE ACCIÓN (DEBAJO DE CONTACTO) ======== */
+.convenio-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.6rem; /* 🔹 debajo del texto de contacto */
+  padding-top: 0.25rem;
+  width: 100%;
+}
+
+.convenio-actions button {
+  padding: 0.42rem 0.8rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* botón editar */
+.btn-editar {
+  background-color: #2563eb;
+}
+
+.btn-editar:hover {
+  background-color: #1d4ed8;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+/* botón eliminar */
+.btn-eliminar {
+  background-color: #dc2626;
+}
+
+.btn-eliminar:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+}
+
+/* animación al aparecer */
+.convenio-card.selected .convenio-actions {
+  animation: fadeInUp 0.22s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======== BOTONES PRINCIPALES ======== */
+.btn-agregar {
+  background: linear-gradient(135deg, #7888AA 0%, #6a7a9a 100%);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(120, 136, 170, 0.25);
+  width: 100%;
+}
+
+.btn-agregar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(120, 136, 170, 0.35);
+}
+
+.btn-volver {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem 1.5rem;
+  font-size: 0.9rem;
+  color: #4b5563;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  width: 100%;
+}
+
+.btn-volver:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* ======== BOTÓN QUITAR IMAGEN ======== */
+.btn-quitar-imagen {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-quitar-imagen:hover {
+  background: #fecaca;
+}
+
+/* ======== ANIMACIONES ======== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 480px) {
+  .convenio-actions {
+    gap: 0.35rem;
+  }
+
+  .convenio-actions button {
+    font-size: 0.78rem;
+    padding: 0.34rem 0.7rem;
+  }
+}
+
+@media (max-height: 650px) {
+  .agregar-convenio-container {
+    transform: scale(0.95);
+  }
+}
+
+/* ======== SWEETALERT2 ======== */
+.swal2-popup {
+  border-radius: 12px;
+  font-family: "Inter", sans-serif;
+}
+
+.swal2-input {
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #f9fbfd;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  box-shadow: none !important;
+}
+
+.swal2-styled.swal2-confirm {
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 700;
+}
