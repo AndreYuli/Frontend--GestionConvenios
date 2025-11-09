@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext";
 import Swal from "sweetalert2";
 import "../styles/login.css";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/UNACLOGO.png";
 
 function Login() {
   const navigate = useNavigate();

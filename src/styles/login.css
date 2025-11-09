@@ -30,8 +30,6 @@ body {
 }
 
 .login-container {
-  background: #ffffff;
-  border-radius: 25px;
   width: 100%;
   max-width: 380px;
   padding: 25px 25px 22px;

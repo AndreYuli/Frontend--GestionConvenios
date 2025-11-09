@@ -1,41 +1,74 @@
-import { useState, useEffect } from "react";
-import "../styles/menuPrincipal.css";
-import logo from "../assets/logo.jpg";
-import { FiMenu, FiX, FiHome, FiLogOut, FiFilePlus } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import "../styles/menuPrincipalAdmin.css";
+import logo from "../assets/UNACLOGO.png";
+import {
+  FiMenu,
+  FiX,
+  FiHome,
+  FiLogOut,
+  FiFilePlus,
+  FiActivity,
+  FiBook,
+  FiCpu,
+  FiBriefcase,
+  FiUsers,
+  FiArrowUpCircle, // 🔹 Icono volver arriba
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 
 function Convenios() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const navigate = useNavigate();
   const { logout, user, isAuthenticated } = useAuth();
+  const conveniosRef = useRef(null);
 
-  // 🔹 Verificar si hay sesión activa al cargar
+  // 🔹 Verificar sesión
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
     }
   }, [isAuthenticated, navigate]);
 
-  // 🔹 Función para moverse entre páginas
+  // 🔹 Mostrar el botón al hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // 🔹 Navegación
   const handleNavigate = (path) => {
     setMenuOpen(false);
     navigate(path);
   };
 
-  // 🔹 Función para cerrar sesión
+  // 🔹 Logout
   const handleLogout = async () => {
-    await logout(); // Llama al logout del backend
+    await logout();
     setMenuOpen(false);
     navigate("/login");
   };
 
+  // 🔹 Scroll suave a convenios
+  const handleScrollToConvenios = () => {
+    conveniosRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 🔹 Scroll arriba
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const convenios = [
-    { nombre: "Ciencias de la Salud", icon: "🏥", color: "#667eea" },
-    { nombre: "Teología y Religión", icon: "📚", color: "#f093fb" },
-    { nombre: "Ingeniería", icon: "⚙️", color: "#4facfe" },
-    { nombre: "Ciencias Administrativas y Contables", icon: "💼", color: "#43e97b" },
-    { nombre: "Ciencias Humanas y de la Educación", icon: "🎓", color: "#fa709a" },
+    { nombre: "Ciencias de la Salud", icon: <FiActivity />, color: "#667eea" },
+    { nombre: "Teología y Religión", icon: <FiBook />, color: "#f093fb" },
+    { nombre: "Ingeniería", icon: <FiCpu />, color: "#4facfe" },
+    { nombre: "Ciencias Administrativas y Contables", icon: <FiBriefcase />, color: "#43e97b" },
+    { nombre: "Ciencias Humanas y de la Educación", icon: <FiUsers />, color: "#fa709a" },
   ];
 
   return (
@@ -46,7 +79,6 @@ function Convenios() {
           <img src={logo} alt="UNAC" className="logo" />
         </div>
 
-        {/* Botón del menú hamburguesa */}
         <button
           className="menu-toggle"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -55,7 +87,6 @@ function Convenios() {
           {menuOpen ? <FiX /> : <FiMenu />}
         </button>
 
-        {/* Menú hamburguesa */}
         {menuOpen && (
           <div className="menu-hamburguesa">
             <div className="menu-header">
@@ -94,7 +125,7 @@ function Convenios() {
             Conectamos a nuestra comunidad universitaria con las mejores empresas e instituciones
             para crear oportunidades de crecimiento profesional y académico.
           </p>
-          <button className="btn-explorar">
+          <button className="btn-explorar" onClick={handleScrollToConvenios}>
             Explorar convenios
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -108,7 +139,7 @@ function Convenios() {
       </section>
 
       {/* Convenios */}
-      <section className="convenios-section">
+      <section className="convenios-section" ref={conveniosRef}>
         <div className="section-header">
           <h3>Facultades con Convenios Activos</h3>
           <p>Explora las oportunidades disponibles en cada facultad</p>
@@ -128,6 +159,15 @@ function Convenios() {
           ))}
         </div>
       </section>
+
+      {/* 🔝 Botón Volver arriba */}
+      <button
+        className={`btn-scroll-top ${showScrollTop ? "show" : ""}`}
+        onClick={scrollToTop}
+        title="Volver arriba"
+      >
+        <FiArrowUpCircle size={38} />
+      </button>
     </div>
   );
 }
